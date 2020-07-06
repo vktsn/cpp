@@ -13,6 +13,7 @@ public:
     }
 
     safe_c_array_t& operator=(const safe_c_array_t& original) {
+            delete[] arr;
             size = original.size;
             arr = new int[size];
             for (int i = 0; i < size; i++) {

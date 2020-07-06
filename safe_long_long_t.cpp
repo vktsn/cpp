@@ -39,6 +39,28 @@ public:
         return *this;
     }
 
+    safe_long_long_t& operator++() {
+        value++;
+        return *this;
+    }
+    
+    safe_long_long_t operator++(int i) {
+        safe_long_long_t old = *this;
+        ++* this;
+        return old;
+    }
+    
+    safe_long_long_t& operator--() {
+        --value;
+        return *this;
+    }
+    
+    safe_long_long_t operator--(int i) {
+        safe_long_long_t old = *this;
+        --* this;
+        return old;
+    }
+
     friend ostream& operator<<(ostream& out, const safe_long_long_t& a) {
         out << a.value;
         return out;
@@ -53,6 +75,8 @@ public:
     friend bool operator==(const safe_long_long_t& a, const safe_long_long_t& b);
     friend bool operator>(const safe_long_long_t& a, const safe_long_long_t& b);
     friend bool operator<(const safe_long_long_t& a, const safe_long_long_t& b);
+    friend bool operator>=(const safe_long_long_t& a, const safe_long_long_t& b);
+    friend bool operator<=(const safe_long_long_t& a, const safe_long_long_t& b);
 };
 
 safe_long_long_t operator+(safe_long_long_t a, const safe_long_long_t& b) {
@@ -92,6 +116,15 @@ bool operator<(const safe_long_long_t& a, const safe_long_long_t& b) {
     return (a.value < b.value);
 }
 
+bool operator>=(const safe_long_long_t& a, const safe_long_long_t& b) {
+    return !(a < b);
+}
+
+bool operator<=(const safe_long_long_t& a, const safe_long_long_t& b) {
+    return !(a > b);
+}
+
+
 int main() {
     safe_long_long_t a(12);
     safe_long_long_t b(3);
@@ -100,9 +133,15 @@ int main() {
     cout << "a * b = " << a * b << endl;
     cout << "a / b = " << a / b << endl;
     cout << "b % a = " << b % a << endl;
+    cout << "a-- = " << a-- << endl;
+    cout << "--a = " << --a << endl;
+    cout << "a++ = " << a++ << endl;
+    cout << "++a = " << ++a << endl;
     cout << "a != b = " << (a != b) << endl;
     cout << "a == b = " << (a == b) << endl;
     cout << "a > b = " << (a > b) << endl;
     cout << "a < b = " << (a < b) << endl;
+    cout << "a >= b = " << (a >= b) << endl;
+    cout << "a =< b = " << (a <= b) << endl;
     return 0;
 }

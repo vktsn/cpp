@@ -1,32 +1,36 @@
 #include <iostream>
 #include <cmath>
+#include <fstream>
 using namespace std;
 
-int n, h, i, c, SignChanging;
-double x0, x1, step, x, y, min, max, height, value, cell;
+//int n, h, i, c, SignChanging;
+int i, n, h;
+double x0, x1, step, x, y, min, max, height, value, cell, c, SignChanging;
 bool LowerZero;
 
 int main() {
 
+	ofstream fout;
+	fout.open("file.txt");
 	//вводим переменные кол-во столбцов, максимальная высота, от куда до куда
 	cin >> n >> h >> x0 >> x1;
 	//массив, в котором будет храниться искомый рисунок
-	bool **arr = new bool* [n];
-	for (i = 0; i < n; i++)
-		arr[i] = new bool[h];
+	bool** arr = new bool* [h];
+	for (i = 0; i < h; i++)
+		arr[i] = new bool[n];
 	//узнаем шаг по шкале х
 	step = (x1 - x0) / n;
 	//крайний левый х, для которого будем считать значение
 	x = x0 + step / 2;
 	//!!!ФУНКЦИЯ!!!
-	y = x;
+	y = -x*x - 0.5;
 	min = y;
 	max = y;
 	//ищем разброс по шкале у
 	for (i = 1; i < n; i++) {
 		x += step;
 		//!!!ФУНКЦИЯ!!!
-		y = x;
+		y = -x * x - 0.5;
 		if (y > max) {
 			max = y;
 		}
@@ -48,24 +52,35 @@ int main() {
 		for (int j = 0; j < n; j++) {
 			x = x0 + step / 2 + step * j;
 			//!!!ФУНКЦИЯ!!!
-			value = x;
+			value = -x * x - 0.5;
 			cell = (min + height * i);
 			arr[i][j] = (cell < value) && (value > 0) && (cell > 0) ||
-				(cell > value)& (value < 0)& (cell < 0) ? true : false;
+				(cell > value) & (value < 0) & (cell < 0) ? true : false;
 		};
 	};
+
+	if (max < 0) {
+		for (int i = 0; i <= n + 2; i++)
+		{
+			fout << "'";
+		}
+		fout << endl;
+	}
+	
 	for (int i = h - 1; i >= 0; i--) {
-		cout << h - i << " ";
+		fout << h - i << " ";
 		for (int j = 0; j < n; j++) {
-			if (arr[i][j]) cout << "?";
-			else cout << " ";
+			if (arr[i][j]) fout << "?";
+			else fout << " ";
 		};
-		cout << endl;
-		if (SignChanging == i) {
+		fout << endl;
+		if (SignChanging == i && max >= 0) {
 			for (int j = 0; j < n + 2; j++) {
-				cout << "'";
+				fout << "'";
 			};
-			cout << endl;
+			fout << endl;
 		};
 	};
+	fout.close();
+	delete[] arr;
 };
